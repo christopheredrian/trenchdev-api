@@ -3,12 +3,12 @@
 module.exports = {
 
   development: {
-    client: 'mysql2',
+    client: process.env.DB_CLIENT || 'mysql2',
     connection: {
-      database: 'trenchdev_api',
-      user:     'root',
-      password: 'root',
-      port: '8889'
+      database: process.env.DB_NAME || '',
+      user:     process.env.DB_USER || '',
+      password: process.env.DB_PASSWORD || '',
+      port: process.env.DB_PORT || ''
     },
     pool: {
       min: 2,
@@ -20,11 +20,11 @@ module.exports = {
   },
 
   staging: {
-    client: 'mysql',
+    client: process.env.DB_CLIENT || 'mysql2',
     connection: {
-      database: 'trenchdev_api',
-      user:     'root',
-      password: 'mysql'
+      database: process.env.DB_NAME || '',
+      user:     process.env.DB_USER || '',
+      password: process.env.DB_PASSWORD || ''
     },
     pool: {
       min: 2,
@@ -36,11 +36,11 @@ module.exports = {
   },
 
   production: {
-    client: 'postgresql',
+    client: process.env.DB_CLIENT || 'mysql2',
     connection: {
-      database: 'my_db',
-      user:     'username',
-      password: 'password'
+      database: process.env.DB_NAME || '',
+      user:     process.env.DB_USER || '',
+      password: process.env.DB_PASSWORD || ''
     },
     pool: {
       min: 2,
