@@ -7,7 +7,8 @@ module.exports = {
     connection: {
       database: 'trenchdev_api',
       user:     'root',
-      password: ''
+      password: 'root',
+      port: '8889'
     },
     pool: {
       min: 2,
@@ -15,7 +16,7 @@ module.exports = {
     },
     migrations: {
       tableName: 'knex_migrations'
-    }
+    },
   },
 
   staging: {
