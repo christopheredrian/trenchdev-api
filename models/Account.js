@@ -3,11 +3,11 @@ const knex = require('../db/knex');
 
 Model.knex(knex);
 
-class ApplicationType extends Model {
+class Account extends Model {
 
   static get tableName() {
-    return 'application_types';
+    return 'accounts';
   }
 }
 
-module.exports = ApplicationType;
+module.exports = Account;
