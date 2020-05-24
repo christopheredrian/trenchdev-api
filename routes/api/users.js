@@ -38,7 +38,7 @@ router.post('/', [
         }
 
         // see if user exists 
-        let user = await User.query().findOne({ email, account_id: 1 });
+        let user = await User.query().findOne({ email, account_id: accountId });
         console.log(user);
 
         if (user) {
@@ -65,6 +65,7 @@ router.post('/', [
         const payload = {
             user: {
                 id: user.id,
+                accountId: user.account_id,
             }
         };
 

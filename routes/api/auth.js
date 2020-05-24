@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../../models/User');
+const Account = require('../../models/Account');
 const authMiddleware = require('../../middleware/auth');
 
 const { check, validationResult } = require('express-validator');
@@ -22,12 +23,13 @@ router.get('/', authMiddleware, async (req, res) => {
     }
 });
 
-// @route   GET api/posts
+// @route   POST api/posts
 // @desc    Authenticate user and get token 
 // @access  Public
 router.post('/', [
     check('email', 'Please include a valid email').isEmail(),
-    check('password', 'Password is required').exists()
+    check('password', 'Password is required').exists(),
+    check('accountId', 'Account ID is required').exists()
 ], async (req, res) => {
 
     const errors = validationResult(req);
@@ -36,12 +38,19 @@ router.post('/', [
         return res.status(400).json({ errors: errors.array() })
     }
 
-    const { email, password } = req.body;
+    const { email, password, accountId } = req.body;
 
     try {
 
+        // see if account exists 
+        const account = await Account.query().findOne({ id: accountId });
+
+        if (!account) {
+            return res.status(400).json({ errors: [{ msg: "Error in parsing account" }] });
+        }
+
         // see if user exists 
-        let user = await User.query().findOne({ email });
+        let user = await User.query().findOne({ email, account_id: accountId });
 
         if (!user) {
             return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
