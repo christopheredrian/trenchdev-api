@@ -2,11 +2,11 @@
 exports.seed = function(knex) {
 
   // Deletes ALL existing entries
-  return knex('applications').del()
+  return knex('application_types').del()
     .then(function () {
       // Inserts seed entries
-      return knex('applications').insert([
-        {id: 1, application_name: 'shop'},
+      return knex('application_types').insert([
+        {id: 1, name: 'shop'},
       ]);
     });
 };
