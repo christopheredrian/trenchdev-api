@@ -40,9 +40,9 @@ module.exports = {
   production: {
     client: process.env.DB_CLIENT || 'mysql2',
     connection: {
-      database: process.env.DB_NAME || '',
-      user:     process.env.DB_USER || '',
-      password: process.env.DB_PASSWORD || ''
+      database: process.env.DB_NAME,
+      user:     process.env.DB_USER,
+      password: process.env.DB_PASSWORD
     },
     pool: {
       min: 2,
