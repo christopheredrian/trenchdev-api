@@ -21,7 +21,6 @@
     "gravatar": "^1.8.0",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.21.1",
-    "mysql2": "^2.1.0",
     "objection": "^2.1.3",
     "pg": "^8.2.1",
     "request": "^2.88.2"
