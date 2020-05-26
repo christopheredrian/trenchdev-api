@@ -16,17 +16,17 @@ const jwt = require('jsonwebtoken');
 router.get('/', authMiddleware, async (req, res) => {
 
     try {
-        const user = await User.query().findOne({id: req.user.id});
+        const user = await User.query().findOne({ id: req.user.id });
         res.json(user);
     } catch (error) {
-        res.status(400).json({errors: {msg: "User not found"}});
+        res.status(400).json({ errors: { msg: "User not found" } });
     }
 });
 
-// @route   POST api/posts
+// @route   POST api/auth/login
 // @desc    Authenticate user and get token 
 // @access  Public
-router.post('/', [
+router.post('/login', [
     check('email', 'Please include a valid email').isEmail(),
     check('password', 'Password is required').exists(),
     check('accountId', 'Account ID is required').exists()
@@ -79,7 +79,14 @@ router.post('/', [
             { expiresIn: 3600 * 100 }, // 3600 seconds * 100 
             (err, token) => {
                 if (err) throw err;
-                res.json({ token });
+                res.json({
+                    user: {
+                        'name': user.name,
+                        'email': user.email,
+                        'role': user.role,
+                        token
+                    }
+                });
             }
         );
 

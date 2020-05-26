@@ -10,10 +10,10 @@ const User = require('../../models/User');
 const Account = require('../../models/Account');
 const ApplicationType = require('../../models/ApplicationType');
 
-// @route   POST api/users
+// @route   POST api/users/register
 // @desc    Register user 
 // @access  Public
-router.post('/', [
+router.post('/register', [
     check('name', 'name is required').not().isEmpty(),
     check('email', 'Please include a valid email').isEmail(),
     check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 }),
@@ -76,7 +76,14 @@ router.post('/', [
             (err, token) => {
                 if (err) throw err;
                 console.log(token);
-                res.json({ token });
+                res.json({
+                    user: {
+                        'name': user.name,
+                        'email': user.email,
+                        'role': user.role,
+                        token
+                    }
+                });
             }
         );
 
