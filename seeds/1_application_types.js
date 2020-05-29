@@ -6,7 +6,7 @@ exports.seed = function(knex) {
     .then(function () {
       // Inserts seed entries
       return knex('application_types').insert([
-        {id: 1, name: 'shop'},
+        {name: 'shop'},
       ]);
     });
 };
