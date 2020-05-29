@@ -70,6 +70,7 @@ router.post('/login', [
         const payload = {
             user: {
                 id: user.id,
+                account_id: user.account_id,
             }
         };
 

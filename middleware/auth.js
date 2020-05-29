@@ -17,7 +17,7 @@ module.exports = function (req, res, next) {
         req.user = decoded.user;
         next();
     } catch (error) {
-        return res.status(401).json({msg: 'Invalid tokem, authorization denied'});        
+        return res.status(401).json({msg: 'Invalid token, authorization denied'});        
     }
 
 };
