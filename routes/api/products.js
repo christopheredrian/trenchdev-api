@@ -42,10 +42,10 @@ router.get('/categories', async (req, res) => {
 
 });
 
-// @route   POST api/products/upsert
+// @route   POST api/products/upsert_product_category
 // @desc    Upsert product
 // @access  Private
-router.post('/upsert', [
+router.post('/upsert_product_category', [
     auth,
     check('name', 'Category name is required').not().isEmpty(),
     check('description', 'Please include category description').not().isEmpty(),

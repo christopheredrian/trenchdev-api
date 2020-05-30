@@ -41,6 +41,7 @@ router.post('/login', [
 
     try {
         const account_id = req.header('x-account-id');
+        console.log(account_id);
 
         // see if account exists 
         const account = await Account.query().findOne({ id: account_id });
