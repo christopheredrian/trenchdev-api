@@ -29,7 +29,6 @@ router.get('/', authMiddleware, async (req, res) => {
 router.post('/login', [
     check('email', 'Please include a valid email').isEmail(),
     check('password', 'Password is required').exists(),
-    check('accountId', 'Account ID is required').exists()
 ], async (req, res) => {
 
     const errors = validationResult(req);
@@ -38,19 +37,20 @@ router.post('/login', [
         return res.status(400).json({ errors: errors.array() })
     }
 
-    const { email, password, accountId } = req.body;
+    const { email, password } = req.body;
 
     try {
+        const account_id = req.header('x-account-id');
 
         // see if account exists 
-        const account = await Account.query().findOne({ id: accountId });
+        const account = await Account.query().findOne({ id: account_id });
 
         if (!account) {
             return res.status(400).json({ errors: [{ msg: "Error in parsing account" }] });
         }
 
         // see if user exists 
-        let user = await User.query().findOne({ email, account_id: accountId });
+        let user = await User.query().findOne({ email, account_id });
 
         if (!user) {
             return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });

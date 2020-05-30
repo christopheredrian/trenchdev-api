@@ -17,7 +17,6 @@ router.post('/register', [
     check('name', 'name is required').not().isEmpty(),
     check('email', 'Please include a valid email').isEmail(),
     check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 }),
-    check('accountId', 'Account ID is required').not().isEmpty(),
 ], async (req, res) => {
 
     const errors = validationResult(req);
@@ -26,19 +25,26 @@ router.post('/register', [
         return res.status(400).json({ errors: errors.array() })
     }
 
-    const { name, email, password, accountId } = req.body;
+    const { name, email, password } = req.body;
 
     try {
 
+        const account_id = req.header('x-account-id');
+        
+        // check if no account id  
+        if (!account_id) {
+            return res.status(401).json({ msg: 'No account id' });
+        }
+
         // see if account exists 
-        const account = await Account.query().findOne({ id: accountId });
+        const account = await Account.query().findOne({ id: account_id });
 
         if (!account) {
             return res.status(400).json({ errors: [{ msg: "Error in parsing account" }] });
         }
 
         // see if user exists 
-        let user = await User.query().findOne({ email, account_id: accountId });
+        let user = await User.query().findOne({ email, account_id });
         console.log(user);
 
         if (user) {
@@ -50,7 +56,7 @@ router.post('/register', [
             email,
             password,
             role: 'customer', // Default
-            account_id: accountId
+            account_id
         };
 
         const salt = await bcrpyt.genSalt(10); // generate salt with 10 rounds 
