@@ -31,7 +31,9 @@ router.get('/categories', async (req, res) => {
         }
 
         const product_categories = await ProductCategory.query()
-            .where('account_id', account_id);
+            .where('account_id', account_id)
+            .orderBy('is_featured', 'desc')
+            .orderBy('name', 'asc');
 
         res.json({ product_categories });
 
@@ -90,7 +92,7 @@ router.get('/categories/:category_id', async (req, res) => {
 router.post('/upsert_product_category', [
     auth,
     check('name', 'Category name is required').not().isEmpty(),
-    check('description', 'Please include category description').not().isEmpty(),
+    check('is_featured', 'Is featured flag for category is required').not().isEmpty(),
 ], async (req, res) => {
 
     const errors = validationResult(req);
@@ -99,7 +101,7 @@ router.post('/upsert_product_category', [
         return res.status(400).json({ errors: errors.array() })
     }
 
-    const { id, name, description } = req.body;
+    const { id, name, is_featured } = req.body;
 
     try {
         const account_id = req.header('x-account-id');
@@ -124,13 +126,13 @@ router.post('/upsert_product_category', [
         }
 
         if (id) {
-            const product_category = await ProductCategory.query().patchAndFetchById(id, { name, description });
+            const product_category = await ProductCategory.query().patchAndFetchById(id, { name, is_featured });
 
             return res.json({ product_category });
         } else {
             const productCategoryObj = {
                 name,
-                description,
+                is_featured,
                 account_id
             };
 
