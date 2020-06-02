@@ -40,7 +40,7 @@ router.post('/login', [
     const { email, password } = req.body;
 
     try {
-        const account_id = req.header('x-account-id');
+        const account_id = parseInt(req.header('x-account-id'));
         console.log('Request from account id: ',account_id);
 
         // see if account exists 

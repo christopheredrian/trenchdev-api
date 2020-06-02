@@ -15,7 +15,8 @@ exports.seed = async(knex) => {
         {email: 'admin@test.com', password, name: "Admin", role: 'admin', account_id: null},
         {email: 'test1@test.com', password, name: "John Tester 1", role: 'business_owner', account_id: null},
         {email: 'test2@test.com', password, name: "Tester 2", role: 'customer', account_id: null},
-        {email: 'test3@test.com', password, name: "Tester 3", role: 'customer', account_id: null}
+        {email: 'test3@test.com', password, name: "Tester 3", role: 'customer', account_id: null},
+        
       ]);
     });
 };

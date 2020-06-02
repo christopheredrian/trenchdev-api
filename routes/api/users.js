@@ -29,7 +29,7 @@ router.post('/register', [
 
     try {
 
-        const account_id = req.header('x-account-id');
+        const account_id = parseInt(req.header('x-account-id'));
         
         // check if no account id  
         if (!account_id) {
