@@ -5,9 +5,17 @@ Model.knex(knex);
 
 class User extends Model {
 
-  static get tableName() {
-    return 'users';
-  }
+    $beforeInsert() {
+        this.created_at = new Date().toISOString();
+    }
+
+    $beforeUpdate() {
+        this.updated_at = new Date().toISOString();
+    }
+
+    static get tableName() {
+        return 'users';
+    }
 }
 
 module.exports = User;
