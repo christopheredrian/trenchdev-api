@@ -4,7 +4,7 @@ exports.up = function (knex) {
         t.increments('id');
         t.string('name');
         t.boolean('is_featured').defaultTo(false);
-        t.boolean('is_disabled').defaultTo(false);
+        t.boolean('is_archived').defaultTo(false);
         t.integer('parent_id').unsigned().nullable().defaultTo(null);
         t.integer('account_id').unsigned().notNullable();
         t.timestamp('created_at').defaultTo(knex.fn.now());

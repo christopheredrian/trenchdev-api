@@ -253,10 +253,10 @@ router.get('/delete/:category_id', auth, async (req, res) => {
         const deleted_at = new Date().toISOString();
 
         const product_category = await ProductCategory.query()
-            .patchAndFetchById(req.params.category_id, { deleted_at });
+            .patchAndFetchById(req.params.category_id, { deleted_at, is_featured: false });
 
         const numUpdated = await ProductCategory.query()
-            .patch({ deleted_at })
+            .patch({ deleted_at, is_featured: false })
             .where('parent_id', req.params.category_id);
 
         return res.json({ product_category });
@@ -268,10 +268,10 @@ router.get('/delete/:category_id', auth, async (req, res) => {
 
 });
 
-// @route   POST api/product_categories/toggle_is_disabled/:category_id
+// @route   POST api/product_categories/toggle_is_archived/:category_id
 // @desc    Disable product category
 // @access  Private
-router.get('/toggle_is_disabled/:category_id', auth, async (req, res) => {
+router.get('/toggle_is_archived/:category_id', auth, async (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -311,8 +311,77 @@ router.get('/toggle_is_disabled/:category_id', auth, async (req, res) => {
             return res.status(404).json({ errors: [{ msg: "Category not found" }] });
         }
 
+        console.log(`Category to toggle is_archived flag: ID = ${t_product_category.id}  NAME = ${t_product_category.name}`);
+
         const product_category = await ProductCategory.query()
-            .patchAndFetchById(req.params.category_id, { is_disabled: !t_product_category.is_disabled });
+            .patchAndFetchById(req.params.category_id, {
+                is_archived: !t_product_category.is_archived,
+                is_featured: false
+            });
+
+        const numUpdated = await ProductCategory.query()
+            .patch({
+                is_archived: !t_product_category.is_archived,
+                is_featured: false
+            })
+            .where('parent_id', req.params.category_id);
+
+        return res.json({ product_category });
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Server Error");
+    }
+
+});
+
+// @route   POST api/product_categories/toggle_is_featured/:category_id
+// @desc    Disable product category
+// @access  Private
+router.get('/toggle_is_featured/:category_id', auth, async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() })
+    }
+
+    try {
+        const account_id = parseInt(req.header('x-account-id'));
+
+        // check if no account id
+        if (!account_id) {
+            return res.status(401).json({ msg: 'No account id' });
+        }
+
+        // see if account exists 
+        const account = await Account.query().findOne({ id: account_id });
+
+        if (!account) {
+            return res.status(400).json({ errors: [{ msg: "Error in handling saving of category" }] });
+        }
+
+        // see if user exists 
+        let user = await User.query().findOne({ id: req.user.id, account_id });
+
+        if (!user) {
+            return res.status(400).json({ errors: [{ msg: "Error in handling saving of category" }] });
+        }
+
+        // see if not admin or business owner 
+        if (user.account_id !== account_id && (user.role !== 'business_owner' || user.role !== 'admin')) {
+            return res.status(401).json({ errors: [{ msg: "Unauthorized" }] });
+        }
+
+        const t_product_category = await ProductCategory.query().findOne({ id: req.params.category_id });
+
+        if (!t_product_category) {
+            return res.status(404).json({ errors: [{ msg: "Category not found" }] });
+        }
+
+        console.log(`Category to toggle is_featured flag: ID = ${t_product_category.id}  NAME = ${t_product_category.name}`);
+
+        const product_category = await ProductCategory.query()
+            .patchAndFetchById(req.params.category_id, { is_featured: !t_product_category.is_featured });
 
         return res.json({ product_category });
 
